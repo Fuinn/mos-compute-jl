@@ -37,21 +37,51 @@ else
     pwd = "guest"
 end
 
+if haskey(ENV, "MOS_COMPUTE_CONN_RETRIES_MAX")
+    conn_retries_max = parse(Int64, ENV["MOS_COMPUTE_CONN_RETRIES_MAX"])
+else
+    conn_retries_max = 60
+end
+
+if haskey(ENV, "MOS_COMPUTE_CONN_RETRIES_INT")
+    conn_retries_int = parse(Int64, ENV["MOS_COMPUTE_CONN_RETRIES_INT"])
+else
+    conn_retries_int = 5
+end
+
 auth_params = Dict{String,Any}(
     "MECHANISM"=>"AMQPLAIN", 
     "LOGIN"=>usr, 
     "PASSWORD"=>pwd
 )
 
+@info("MOS Julia worker")
+@info("----------------")
+
 amqps = amqps_configure()
 
-conn = connection(; 
-    virtualhost="/", 
-    host=host, 
-    port=port, 
-    auth_params=auth_params,
-    amqps=nothing
-)
+conn_ok = false
+conn_retries = 0
+while conn_retries < conn_retries_max
+    try
+        global conn = connection(; 
+            virtualhost="/", 
+            host=host, 
+            port=port, 
+            auth_params=auth_params,
+            amqps=nothing
+        )
+        global conn_ok = true
+        break
+    catch
+        @info("Waiting for message queue to be available ...")
+        sleep(conn_retries_int)
+        global conn_retries += 1
+    end
+end
+if !conn_ok
+    throw("Unable to connect to rabbitmq")
+end
 
 chan = channel(conn, AMQPClient.UNUSED_CHANNEL, true)
 
@@ -70,10 +100,8 @@ function callback(msg)
     @info("Task done")
 end
 
+@info("Consuming messages ...")
 success, consumer_tag = basic_consume(chan, "mos-julia", callback; no_ack=true)
-
-@info("MOS Julia worker")
-@info("----------------")
 
 while true
     try
