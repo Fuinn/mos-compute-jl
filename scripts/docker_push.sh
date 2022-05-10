@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker push tomastinoco/mos-compute-jl
+sudo docker push tomastinoco/mos-demo-compute-jl
