@@ -1,6 +1,6 @@
 name = "MOSCompute"
 uuid = "44e464c8-1265-11ea-3e7d-e3ac06accecb"
-authors = ["Tomas Tinoco De Rubira <ttinoco5687@gmail.com>"]
+authors = ["Fuinn"]
 version = "0.1.0"
 
 [deps]
