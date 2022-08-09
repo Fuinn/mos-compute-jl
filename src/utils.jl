@@ -1,7 +1,7 @@
 import JSON
 import WebSockets
 
-function get_admin_credentials()::Tuple{String, String}
+function get_admin_credentials()::Tuple{String, String, String}
     
     # Username
     if haskey(ENV, "MOS_ADMIN_USR")
@@ -17,7 +17,15 @@ function get_admin_credentials()::Tuple{String, String}
         pwd = ""
     end
 
-    return (usr, pwd)
+    # Token
+    if haskey(ENV, "MOS_ADMIN_TKN")
+        tkn = ENV["MOS_ADMIN_TKN"]
+    else
+        tkn = ""
+    end
+
+    
+    return (usr, pwd, tkn)
 end
 
 function get_backend_url()::String
