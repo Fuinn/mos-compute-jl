@@ -18,8 +18,8 @@ function get_admin_credentials()::Tuple{String, String, String}
     end
 
     # Token
-    if haskey(ENV, "MOS_ADMIN_TKN")
-        tkn = ENV["MOS_ADMIN_TKN"]
+    if haskey(ENV, "MOS_BACKEND_TOKEN")
+        tkn = ENV["MOS_BACKEND_TOKEN"]
     else
         tkn = ""
     end
