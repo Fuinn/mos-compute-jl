@@ -19,8 +19,12 @@ function model_run(model_id::Int64, model_name::String, caller_id::Int64)
     interface = MOSInterface.Interface(get_backend_url())
 
     # Token
-    usr, pwd = get_admin_credentials()
-    token = get_user_token(interface, usr, pwd)
+    usr, pwd, tkn = get_admin_credentials()
+    if tkn == ""
+        token = get_user_token(interface, usr, pwd)
+    else
+        token = tkn
+    end
     set_token!(interface, token)
 
     # Model
