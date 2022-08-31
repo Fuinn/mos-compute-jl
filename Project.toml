@@ -1,7 +1,7 @@
 name = "MOSCompute"
 uuid = "44e464c8-1265-11ea-3e7d-e3ac06accecb"
 authors = ["Fuinn"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 AMQPClient = "79c8b4cd-a41a-55fa-907c-fab5288e1383"
